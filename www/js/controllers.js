@@ -22,9 +22,20 @@ angular.module('starter.controllers', [])
 
 //<![CDATA[ 
 //************ ME ***************
-.controller('TodoCtrl', function($scope){
-        $scope.todos = [];
-
+.controller('TodoCtrl', function($scope,$rootScope){
+        
+		$rootScope.$on( "$ionicView.enter", function( scopes, states ) {
+            if(( states.fromCache && states.stateName == "tab.chats" )||(states.fromCache && states.stateName == "tab.dash")) {
+				Todo.readAll().then(function (todos) {
+					$scope.$apply(function () {
+						$scope.todos = todos;
+					});
+				});
+            }
+        });
+		
+		
+		$scope.todos = [];
         var Todo = $data.define("Todo", {
             task: String,
             done: Boolean
@@ -57,5 +68,7 @@ angular.module('starter.controllers', [])
 				}
 			}
 		}
+		
+		
 	});
-//]]>  
+//]]>
